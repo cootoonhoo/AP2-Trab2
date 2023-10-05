@@ -15,135 +15,142 @@ typedef struct
     Produto **MatrizProdutosTrimestre;
 } Filial;
 
-/* Variáveis globais no escopo da aplicação*/
-int QuantidadeProdutosCatalogo = 0;
-int QuantidadeFiliais = 0;
-Produto ***CuboProdutos;
-Filial *ListaFiliais;
+/* Métodos do Cubo */
 
-/* Metodos para o Cubo */
-
-int AlocarCuboProdutos()
+Produto*** AlocaCuboProdutos(int QuantidadeFiliais, int QuantidadeProdutos)
 {
-    //Primeira dimensão = Camada de Trimestres do ano
-    CuboProdutos = (Produto ***)malloc(4 * sizeof(Produto**));
-    if(CuboProdutos == NULL) return 0;
+    Produto ***NovoCuboProdutos = (Produto ***)malloc(4 * sizeof(Produto **));
+    if(NovoCuboProdutos == NULL) return NULL;
 
-    for(int i = 0; i < 4; i++)
-    {
-        // Segunda dimensão = Camada de Filiais
-        *(CuboProdutos+i) = (Produto **)malloc(QuantidadeFiliais * sizeof(Produto*));
-        if(*(CuboProdutos+i) == NULL) return 0;
+    for (int i = 0; i < 4; i++) {
+        NovoCuboProdutos[i] = (Produto **)malloc(QuantidadeFiliais * sizeof(Produto *));
+        if(NovoCuboProdutos[i] == NULL) return NULL;
 
-        for(int j = 0; j < QuantidadeFiliais; j++)
-        {
-            // Terceira dimensõa = Camda de produtos
-            *(*(CuboProdutos+i)+j) = (Produto *)malloc(QuantidadeProdutosCatalogo * sizeof(Produto));
-            if(*(*(CuboProdutos+i)+j) == NULL) return 0;
+        for (int j = 0; j < QuantidadeFiliais; j++) {
+            NovoCuboProdutos[i][j] = (Produto *)malloc(QuantidadeProdutos * sizeof(Produto));
+            if(NovoCuboProdutos[i][j] == NULL) return NULL;
         }
     }
-    return 1;
+
+    return NovoCuboProdutos;
 }
 
-int AlocarListaFiliais()
+Filial* AlocaListaFiliais(int QuantidadeFiliais, Produto ***CuboProdutos)
 {
-    ListaFiliais = (Filial *)malloc(QuantidadeFiliais * sizeof(Filial));
-    if(ListaFiliais == NULL) return 0;
+    Filial *novaListaFiliais;
+    novaListaFiliais = (Filial *)malloc(QuantidadeFiliais*sizeof(Filial));
+    if(novaListaFiliais == NULL) return NULL;
+
     for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        novaListaFiliais[i].MatrizProdutosTrimestre = (Produto **)malloc(4 * sizeof(Produto*));
         for(int j = 0; j < 4; j++)
-            ListaFiliais[i].MatrizProdutosTrimestre[j] = (((CuboProdutos)+i)+j);
-    return 1;
+        {
+            novaListaFiliais[i].MatrizProdutosTrimestre[j] = CuboProdutos[j][i];
+        }
+    }
+    return novaListaFiliais;
+
+    //ListaFiliais[Nº Filial].MatrizProdutosTrimestre[TrimestreAno][Nº Produto]
 }
 
-
-/* Metodos auxiliares */
-int getStringLength(char text[255])
-{
-    int i;
-    for(i = 0; text[i]!='\0'; i++);
-    return i;
-}
-
-/* Métodos de menu */
-void Headder()
+/* Métodos Menu */
+void Headder(int qntProdutos, int qntFiliais)
 {
     printf("\t*****************************************\n");
     printf("\t*\t\t\t\t\t*\n");
     printf("\t*\tSISTEMA DE GESTAO MARKET++\t*\n");
     printf("\t*\t\t\t\t\t*\n");
     printf("\t*****************************************\n");
+    if(qntProdutos > 0 && qntFiliais > 0)
+    {
+        printf("\nProdutos:%d\n", qntProdutos);
+        printf("Filiais:%d", qntFiliais);
+    }
     printf("\n______________________________________________________\n");
 }
 
-int LeituraQuantidadeFiliais()
+void Erro(char msg[])
 {
-    printf("Digite a quantidade de filiais: ");
-    scanf(" %d", &QuantidadeFiliais);
-    if(QuantidadeFiliais > 0) return 1;
-    else return 0;
+    system("cls");
+    system("color 4F");
+    printf("%s\n", msg);
 }
 
-int LeituraQuantidadeProdutos()
-{
-    printf("Digite a quantidade de produtos catalogados: ");
-    scanf(" %d", &QuantidadeProdutosCatalogo);
-    if(QuantidadeProdutosCatalogo > 0) return 1;
-    else return 0;
-}
+/* Métodos para inputs */
 
-
-int InicializaSistema()
+void LeituraQuantidadeFiliais(int *qntFiliais)
 {
-    int ValidacaoInput = 1;
-    int ValidacaoCubo = 0;
-    int ValidaListaFiliais = 0;
-    do
-    {
+    int validacao = 1;
+    do {
         system("cls");
-        Headder();
-        if(!ValidacaoInput)
+        Headder(0,0);
+        if(!validacao)
         {
-            printf("Valor anterior invalido!\n\n");
+            printf("Numero anterior invalido!Digite novamente.\n");
         }
-        ValidacaoInput = LeituraQuantidadeProdutos();
-    }while(!ValidacaoInput);
-
-    do
-    {
-        system("cls");
-        Headder();
-        if(!ValidacaoInput)
-        {
-            printf("Valor anterior invalido!\n\n");
-        }
-        ValidacaoInput = LeituraQuantidadeFiliais();
-    }while(!ValidacaoInput);
-
-    ValidacaoCubo = AlocarCuboProdutos();
-    if(!ValidacaoCubo)
-    {
-        system("cls");
-        system("color 4F");
-        printf("Erro na Alocacao do Cubo de produtos!");
-        return 0;
-    }
-
-    ValidaListaFiliais = AlocarListaFiliais();
-    if(!ValidacaoCubo)
-    {
-        system("cls");
-        system("color 4F");
-        printf("Erro na Alocacao da lista de Filiaias!");
-        return 0;
-    }    
-    return 1;
+        validacao = 1;
+        printf("Digite a quantidade de filiais: ");
+        scanf(" %d", qntFiliais);
+        if(*qntFiliais <= 0) validacao = 0;
+    } while(!validacao);
 }
-
+void LeituraQuantidadeProdutos(int *qntProdutos)
+{
+    int validacao = 1;
+    do {
+        system("cls");
+        Headder(0,0);
+        if(!validacao)
+        {
+            printf("Numero anterior invalido!Digite novamente.\n");
+        }
+        validacao = 1;
+        printf("Digite a quantidade de produtos no catalogo: ");
+        scanf(" %d", qntProdutos);
+        if(*qntProdutos <= 0) validacao = 0;
+    } while(!validacao);
+}
 
 int main()
 {
-    int ValidadorDeRotinas = 0;
-    ValidadorDeRotinas = InicializaSistema();
-    if(!ValidadorDeRotinas) return 0;
+    int QuantidadeProdutos = 0;
+    int QuantidadeFiliais = 0;
+    Filial *ListaFiliais;
+
+    LeituraQuantidadeFiliais(&QuantidadeFiliais);
+    LeituraQuantidadeProdutos(&QuantidadeProdutos);
+
+    Produto ***CuboProdutos = AlocaCuboProdutos(QuantidadeFiliais,QuantidadeProdutos);
+    if(CuboProdutos == NULL)
+    {
+        Erro("Nao foi possivel alocar o cubo de produtos!");
+        return 0;
+    }
+
+    ListaFiliais = AlocaListaFiliais(QuantidadeFiliais,CuboProdutos);
+    if(ListaFiliais == NULL)
+    {
+        Erro("Nao foi possivel alocar a lista de produtos!");
+        return 0;
+    }
+
+
+
+    // Preenchendo o cubo com valores de exemplo
+    for (int t = 0; t < 4; t++) {
+        for (int f = 0; f < QuantidadeFiliais; f++) {
+            for (int p = 0; p < QuantidadeProdutos; p++) {
+                snprintf(CuboProdutos[t][f][p].nomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
+                CuboProdutos[t][f][p].valorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
+            }
+        }
+    }
+
+    // Acesso aos dados do cubo
+    printf("Exemplo de acesso: Nome do produto no 2 trimestre, 1 filial, 3 produto: %s\n", CuboProdutos[1][0][2].nomeProduto);
+    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", CuboProdutos[2][1][3].valorProduto);
+    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", ListaFiliais[1].MatrizProdutosTrimestre[2][3].valorProduto);
+
     return 0;
 }
