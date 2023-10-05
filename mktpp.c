@@ -5,8 +5,9 @@
 /* Structs do programa */
 typedef struct 
 {
-    char nomeProduto[30];
-    float valorProduto;
+    char NomeProduto[30];
+    float ValorProduto;
+    int quantidadeVendas
 } Produto;
 
 typedef struct
@@ -14,6 +15,14 @@ typedef struct
     char NomeFilial[50];
     Produto **MatrizProdutosTrimestre;
 } Filial;
+
+/* Variáveis Globais */
+int QuantidadeProdutos = 0;
+int QuantidadeFiliais = 0;
+Produto ***CuboProdutos;
+Filial *ListaFiliais;
+char **listaNomeProdutos;
+char **listaNomeFiliais;
 
 /* Métodos do Cubo */
 
@@ -54,6 +63,32 @@ Filial* AlocaListaFiliais(int QuantidadeFiliais, Produto ***CuboProdutos)
     //ListaFiliais[Nº Filial].MatrizProdutosTrimestre[TrimestreAno][Nº Produto]
 }
 
+char** AlocaListaNomeProdutos(int QuantidadeProdutos)
+{
+    char **novaListaNomes = (char**)malloc(QuantidadeProdutos * sizeof(char*));
+    if(novaListaNomes == NULL) return NULL;
+
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        novaListaNomes[i] = (char *)malloc(30 * sizeof(char));
+        if(novaListaNomes[i] == NULL) return NULL;
+    }
+    return novaListaNomes;
+}
+
+char** AlocaListaNomeFiliais(int QuantidadeFiliais)
+{
+    char **novaListaNomes = (char**)malloc(QuantidadeFiliais * sizeof(char*));
+    if(novaListaNomes == NULL) return NULL;
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        novaListaNomes[i] = (char *)malloc(50 * sizeof(char));
+        if(novaListaNomes[i] == NULL) return NULL;
+    }
+    return novaListaNomes;
+}
+
 /* Métodos Menu */
 void Headder(int qntProdutos, int qntFiliais)
 {
@@ -79,7 +114,7 @@ void Erro(char msg[])
 
 /* Métodos para inputs */
 
-void LeituraQuantidadeFiliais(int *qntFiliais)
+void LeituraQuantidadeFiliais()
 {
     int validacao = 1;
     do {
@@ -91,11 +126,12 @@ void LeituraQuantidadeFiliais(int *qntFiliais)
         }
         validacao = 1;
         printf("Digite a quantidade de filiais: ");
-        scanf(" %d", qntFiliais);
-        if(*qntFiliais <= 0) validacao = 0;
+        scanf(" %d", &QuantidadeFiliais);
+        if(QuantidadeFiliais <= 0) validacao = 0;
     } while(!validacao);
 }
-void LeituraQuantidadeProdutos(int *qntProdutos)
+
+void LeituraQuantidadeProdutos()
 {
     int validacao = 1;
     do {
@@ -107,21 +143,49 @@ void LeituraQuantidadeProdutos(int *qntProdutos)
         }
         validacao = 1;
         printf("Digite a quantidade de produtos no catalogo: ");
-        scanf(" %d", qntProdutos);
-        if(*qntProdutos <= 0) validacao = 0;
+        scanf(" %d", &QuantidadeProdutos);
+        if(QuantidadeProdutos <= 0) validacao = 0;
     } while(!validacao);
 }
 
-int main()
+void LeituraListaProdutos()
 {
-    int QuantidadeProdutos = 0;
-    int QuantidadeFiliais = 0;
-    Filial *ListaFiliais;
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        setbuf(stdin, 0);
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("Digite o nome do produto %d: ", i+1);
+        fgets(listaNomeProdutos[i],30,stdin);
+    }
+}
 
-    LeituraQuantidadeFiliais(&QuantidadeFiliais);
-    LeituraQuantidadeProdutos(&QuantidadeProdutos);
+void LeituraNomeFiliais()
+{
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        setbuf(stdin, 0);
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("Digite o nome da Filial numero %d: ", i+1);
+        fgets(listaNomeFiliais[i],50,stdin);
+    }
+}
 
-    Produto ***CuboProdutos = AlocaCuboProdutos(QuantidadeFiliais,QuantidadeProdutos);
+void PreencherDadosCubo()
+{
+    system("COLOR 1F");
+    printf("IMPLEMENTAR DADOS CUBOS")
+    system("pause");
+}
+
+/* Metodos do programa - Organização */
+int IniciarSistema()
+{
+    LeituraQuantidadeFiliais();
+    LeituraQuantidadeProdutos();
+
+    CuboProdutos = AlocaCuboProdutos(QuantidadeFiliais,QuantidadeProdutos);
     if(CuboProdutos == NULL)
     {
         Erro("Nao foi possivel alocar o cubo de produtos!");
@@ -135,22 +199,46 @@ int main()
         return 0;
     }
 
+    listaNomeProdutos = AlocaListaNomeProdutos(QuantidadeProdutos);
+    if(listaNomeProdutos == NULL)
+    {
+        Erro("Nao foi possivel alocar a lista de nome dos produtos!");
+        return 0;
+    }
 
+    listaNomeFiliais = AlocaListaNomeFiliais(QuantidadeFiliais);
+    if(listaNomeFiliais == NULL)
+    {
+        Erro("Nao foi possivel alocar a lista de nome dos produtos!");
+        return 0;
+    }
+
+    LeituraListaProdutos();
+    LeituraNomeFiliais();
+    PreencherDadosCubo();
+    return 1;
+}
+
+int main()
+{
+    int ControleDeFluxo = 0;
+    ControleDeFluxo = IniciarSistema();
+    if(!ControleDeFluxo) return 0;
 
     // Preenchendo o cubo com valores de exemplo
     for (int t = 0; t < 4; t++) {
         for (int f = 0; f < QuantidadeFiliais; f++) {
             for (int p = 0; p < QuantidadeProdutos; p++) {
-                snprintf(CuboProdutos[t][f][p].nomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
-                CuboProdutos[t][f][p].valorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
+                snprintf(CuboProdutos[t][f][p].NomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
+                CuboProdutos[t][f][p].ValorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
             }
         }
     }
 
     // Acesso aos dados do cubo
-    printf("Exemplo de acesso: Nome do produto no 2 trimestre, 1 filial, 3 produto: %s\n", CuboProdutos[1][0][2].nomeProduto);
-    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", CuboProdutos[2][1][3].valorProduto);
-    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", ListaFiliais[1].MatrizProdutosTrimestre[2][3].valorProduto);
+    printf("Exemplo de acesso: Nome do produto no 2 trimestre, 1 filial, 3 produto: %s\n", CuboProdutos[0][0][0].NomeProduto);
+    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", CuboProdutos[0][0][0].ValorProduto);
+    printf("Valor Produto pela ListaFiliais: %.2f\n", ListaFiliais[0].MatrizProdutosTrimestre[0][0].ValorProduto);
 
     return 0;
 }
