@@ -40,6 +40,7 @@ Produto*** AlocaCuboProdutos(int QuantidadeFiliais, int QuantidadeProdutos)
         }
     }
 
+    //CuboProdutos[TrimestreAno][Nº Filial][Nº Produto]
     return NovoCuboProdutos;
 }
 
@@ -109,6 +110,154 @@ void Erro(char msg[])
     system("cls");
     system("color 4F");
     printf("%s\n", msg);
+}
+
+int MenuInserir()
+{
+    int OpcaoMenu = 1;
+    do
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t=== Menu Insercao ===\n\n");
+        printf("1 - Inserir venda de um produto/trimestre\n");
+        printf("2 - Inserir venda de um produto/filial\n");
+        printf("3 - Inserir novo produto\n");
+        printf("4 - Inserir nova filial\n");
+        printf("5 - Sair\n");
+        if(OpcaoMenu < 1 || OpcaoMenu > 5)
+            printf("Opcao anterior invalida!\n");
+        printf("\nSelecione uma opcao do menu: ");
+        scanf(" %d", &OpcaoMenu);
+    } while (OpcaoMenu < 1 || OpcaoMenu > 5);
+    switch (OpcaoMenu)
+    {
+    case 1:
+        printf("Implementar produto/trimestre\n");
+        break;
+    case 2:
+        printf("Implementar produto/filial\n");
+        break;
+    case 3:
+        printf("Implementar produto\n");
+        break;    
+    case 4:
+        printf("Implementar nova filial\n");
+        break;    
+    default:
+        return;
+    }
+}
+
+int MenuRemover()
+{
+    int OpcaoMenu = 1;
+    do
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t=== Menu Remocao ===\n\n");
+        printf("1 - Remover Produto\n");
+        printf("2 - Remover filial\n"); //Adicao
+        printf("3 - Sair\n");
+        if(OpcaoMenu < 1 || OpcaoMenu > 3)
+            printf("Opcao anterior invalida!\n");
+        printf("\nSelecione uma opcao do menu: ");
+        scanf(" %d", &OpcaoMenu);
+    } while (OpcaoMenu < 1 || OpcaoMenu > 3);
+    switch (OpcaoMenu)
+    {
+    case 1:
+        printf("Implementar Remover Produto\n");
+        break;
+    case 2:
+        printf("Implementar Remover filial\n");
+        break;    
+    default:
+        return;
+    }
+}
+
+int MenuRelatorios()
+{
+    int OpcaoMenu = 1;
+    do
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t=== Menu Relatorios ===\n\n");
+        printf("1 - Produto mais vendido por filial\n");
+        printf("2 - Filial que mais vende produtos\n");
+        printf("3 - Produto mais vendido\n");
+        printf("4 - Filial que mais vende\n");
+        printf("5 - Melhor trimestre\n");
+        printf("6 - Sair\n");
+        if(OpcaoMenu < 1 || OpcaoMenu > 6)
+            printf("Opcao anterior invalida!\n");
+        printf("\nSelecione uma opcao do menu: ");
+        scanf(" %d", &OpcaoMenu);
+    } while (OpcaoMenu < 1 || OpcaoMenu > 6);
+    switch (OpcaoMenu)
+    {
+    case 1:
+        printf("Produto mais vendido por filial\n");
+        system("pause");
+        break;
+    case 2:
+        printf("Filial que mais vende produtos\n");
+        system("pause");
+        break;    
+    case 3:
+        printf("Produto mais vendido\n");
+        system("pause");
+        break;    
+    case 4:
+        printf("Filial que mais vende\n");
+        system("pause");
+        break;    
+    case 5:
+        printf("Melhor trimestre\n");
+        system("pause");
+        break; 
+    default:
+        return;
+    }
+}
+
+int MenuPrincipal()
+{
+    int OpcaoMenu = 1;
+    do
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t=== Menu Principal ===\n\n");
+        printf("1 - Inserir dados\n");
+        printf("2 - Remover dados\n");
+        printf("3 - Relatorios\n");
+        printf("4 - Sair\n");
+        if(OpcaoMenu < 1 || OpcaoMenu > 4)
+            printf("Opcao anterior invalida!\n");
+        printf("\nSelecione uma opcao do menu: ");
+        scanf(" %d", &OpcaoMenu);
+    } while (OpcaoMenu < 1 || OpcaoMenu > 4);   
+    switch (OpcaoMenu)
+    {
+    case 1:
+        MenuInserir();
+        MenuPrincipal();
+        break;
+    case 2:
+        MenuRemover();
+        MenuPrincipal();
+        break;
+    case 3:
+        MenuRelatorios();
+        MenuPrincipal();
+        break;    
+    default:
+        return;
+    }
 }
 
 /* Métodos para inputs */
@@ -227,63 +376,19 @@ int IniciarSistema()
     return 1;
 }
 
-int MenuInserir()
-{
-    system("cls");
-    Headder(QuantidadeProdutos,QuantidadeFiliais);
-    printf("Implementar Menu Inserir\n");
-    system("pause");
-}
+/* 
 
-int MenuRemover()
-{
-    system("cls");
-    Headder(QuantidadeProdutos,QuantidadeFiliais);
-    printf("Implementar Menu Remover\n");
-    system("pause");
-}
-
-int MenuRelatorios()
-{
-    system("cls");
-    Headder(QuantidadeProdutos,QuantidadeFiliais);
-    printf("Implementar Menu Relatorios\n");
-    system("pause");
-}
-
-int MenuPrincipal()
-{
-    int OpcaoMenu = 1;
-    do{
-    system("cls");
-    Headder(QuantidadeProdutos,QuantidadeFiliais);
-    printf("1 - Inserir dados\n");
-    printf("2 - Remover dados\n");
-    printf("3 - Relatorios\n");
-    printf("4 - Sair\n");
-    if(OpcaoMenu < 1 || OpcaoMenu > 4)
-        printf("Opcao anterior invalida!\n");
-    printf("Selecione uma opcao do menu: ");
-    scanf(" %d", &OpcaoMenu);
-    }while (OpcaoMenu < 1 || OpcaoMenu > 4);   
-    switch (OpcaoMenu)
-    {
-    case 1:
-        MenuInserir();
-        MenuPrincipal();
-        break;
-    case 2:
-        MenuRemover();
-        MenuPrincipal();
-        break;
-    case 3:
-        MenuRelatorios();
-        MenuPrincipal();
-        break;    
-    default:
-        return;
-    }
-}
+        ORDEM DE MANIPULAÇÃO DOS DADOS 
+    CuboProdutos[TrimestreAno][Nº Filial][Nº Produto]
+        - NomeProduto
+        - quantidadeVendas
+    
+    ListaFiliais[Nº Filial]
+        - NomeFiliai
+        - MatrizProdutosTrimestre[TrimestreAno][Nº Produto]
+            - NomeProduto
+            - quantidadeVendas  
+*/
 
 int main()
 {
