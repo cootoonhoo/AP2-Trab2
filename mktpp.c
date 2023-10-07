@@ -6,8 +6,7 @@
 typedef struct 
 {
     char NomeProduto[30];
-    float ValorProduto;
-    int quantidadeVendas
+    float quantidadeVendas;
 } Produto;
 
 typedef struct
@@ -174,9 +173,18 @@ void LeituraNomeFiliais()
 
 void PreencherDadosCubo()
 {
-    system("COLOR 1F");
-    printf("IMPLEMENTAR DADOS CUBOS")
-    system("pause");
+    //Preenchendo dados das filiais
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        strcpy(ListaFiliais[i].NomeFilial, listaNomeFiliais[i]);
+        for(int j = 0; j < QuantidadeProdutos; j++)
+        {
+            strcpy(CuboProdutos[0][i][j].NomeProduto, listaNomeProdutos[j]);
+            strcpy(CuboProdutos[1][i][j].NomeProduto, listaNomeProdutos[j]);
+            strcpy(CuboProdutos[2][i][j].NomeProduto, listaNomeProdutos[j]);
+            strcpy(CuboProdutos[3][i][j].NomeProduto, listaNomeProdutos[j]);
+        }
+    }
 }
 
 /* Metodos do programa - Organização */
@@ -215,8 +223,66 @@ int IniciarSistema()
 
     LeituraListaProdutos();
     LeituraNomeFiliais();
-    PreencherDadosCubo();
+    PreencherDadosCubo(CuboProdutos);
     return 1;
+}
+
+int MenuInserir()
+{
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("Implementar Menu Inserir\n");
+    system("pause");
+}
+
+int MenuRemover()
+{
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("Implementar Menu Remover\n");
+    system("pause");
+}
+
+int MenuRelatorios()
+{
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("Implementar Menu Relatorios\n");
+    system("pause");
+}
+
+int MenuPrincipal()
+{
+    int OpcaoMenu = 1;
+    do{
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("1 - Inserir dados\n");
+    printf("2 - Remover dados\n");
+    printf("3 - Relatorios\n");
+    printf("4 - Sair\n");
+    if(OpcaoMenu < 1 || OpcaoMenu > 4)
+        printf("Opcao anterior invalida!\n");
+    printf("Selecione uma opcao do menu: ");
+    scanf(" %d", &OpcaoMenu);
+    }while (OpcaoMenu < 1 || OpcaoMenu > 4);   
+    switch (OpcaoMenu)
+    {
+    case 1:
+        MenuInserir();
+        MenuPrincipal();
+        break;
+    case 2:
+        MenuRemover();
+        MenuPrincipal();
+        break;
+    case 3:
+        MenuRelatorios();
+        MenuPrincipal();
+        break;    
+    default:
+        return;
+    }
 }
 
 int main()
@@ -225,20 +291,21 @@ int main()
     ControleDeFluxo = IniciarSistema();
     if(!ControleDeFluxo) return 0;
 
+    MenuPrincipal();
+
     // Preenchendo o cubo com valores de exemplo
-    for (int t = 0; t < 4; t++) {
-        for (int f = 0; f < QuantidadeFiliais; f++) {
-            for (int p = 0; p < QuantidadeProdutos; p++) {
-                snprintf(CuboProdutos[t][f][p].NomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
-                CuboProdutos[t][f][p].ValorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
-            }
-        }
-    }
+    // for (int t = 0; t < 4; t++) {
+    //     for (int f = 0; f < QuantidadeFiliais; f++) {
+    //         for (int p = 0; p < QuantidadeProdutos; p++) {
+    //             snprintf(CuboProdutos[t][f][p].NomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
+    //             // CuboProdutos[t][f][p].ValorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
+    //         }
+    //     }
+    // }
 
     // Acesso aos dados do cubo
-    printf("Exemplo de acesso: Nome do produto no 2 trimestre, 1 filial, 3 produto: %s\n", CuboProdutos[0][0][0].NomeProduto);
-    printf("Exemplo de acesso: Valor do produto no 3 trimestre, 2 filial, 4 produto: %.2f\n", CuboProdutos[0][0][0].ValorProduto);
-    printf("Valor Produto pela ListaFiliais: %.2f\n", ListaFiliais[0].MatrizProdutosTrimestre[0][0].ValorProduto);
+    printf("DEBUG CuboProdutos[0][0][0].NomeProduto: %s\n", CuboProdutos[0][0][0].NomeProduto);
+    printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
 
     return 0;
 }
