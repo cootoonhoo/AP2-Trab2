@@ -134,15 +134,19 @@ int MenuInserir()
     {
     case 1:
         printf("Implementar produto/trimestre\n");
+        system("pause");
         break;
     case 2:
         printf("Implementar produto/filial\n");
+        system("pause");
         break;
     case 3:
         printf("Implementar produto\n");
+        system("pause");
         break;    
     case 4:
         printf("Implementar nova filial\n");
+        system("pause");
         break;    
     default:
         return;
@@ -152,6 +156,7 @@ int MenuInserir()
 int MenuRemover()
 {
     int OpcaoMenu = 1;
+    char resp = ' ';
     do
     {
         system("cls");
@@ -159,20 +164,37 @@ int MenuRemover()
         printf("\n \t\t=== Menu Remocao ===\n\n");
         printf("1 - Remover Produto\n");
         printf("2 - Remover filial\n"); //Adicao
-        printf("3 - Sair\n");
-        if(OpcaoMenu < 1 || OpcaoMenu > 3)
+        printf("3 - Reiniciar todo o sistema (!)\n");
+        printf("4 - Sair\n");
+        if(OpcaoMenu < 1 || OpcaoMenu > 4)
             printf("Opcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
-    } while (OpcaoMenu < 1 || OpcaoMenu > 3);
+    } while (OpcaoMenu < 1 || OpcaoMenu > 4);
     switch (OpcaoMenu)
     {
     case 1:
         printf("Implementar Remover Produto\n");
+        system("pause");
         break;
     case 2:
         printf("Implementar Remover filial\n");
-        break;    
+        system("pause");
+        break;
+    case 3:
+        system("cls");
+        Headder(QuantidadeProdutos, QuantidadeFiliais);
+        system("color 4f");
+        printf("\n === ATENCAO === \n\n");
+        printf("Deseja mesmo reiniciar todo o sistema? (s/n)\n");
+        scanf(" %c", &resp);
+        system("color 0f");
+            if(resp == 's')
+            {
+            printf("Implementar Limpar Sistema\n");
+            system("pause");
+            }
+        break; 
     default:
         return;
     }
