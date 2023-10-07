@@ -126,7 +126,7 @@ int MenuInserir()
         printf("4 - Inserir nova filial\n");
         printf("5 - Sair\n");
         if(OpcaoMenu < 1 || OpcaoMenu > 5)
-            printf("Opcao anterior invalida!\n");
+            printf("\nOpcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
     } while (OpcaoMenu < 1 || OpcaoMenu > 5);
@@ -167,7 +167,7 @@ int MenuRemover()
         printf("3 - Reiniciar todo o sistema (!)\n");
         printf("4 - Sair\n");
         if(OpcaoMenu < 1 || OpcaoMenu > 4)
-            printf("Opcao anterior invalida!\n");
+            printf("\nOpcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
     } while (OpcaoMenu < 1 || OpcaoMenu > 4);
@@ -215,7 +215,7 @@ int MenuRelatorios()
         printf("5 - Melhor trimestre\n");
         printf("6 - Sair\n");
         if(OpcaoMenu < 1 || OpcaoMenu > 6)
-            printf("Opcao anterior invalida!\n");
+            printf("\nOpcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
     } while (OpcaoMenu < 1 || OpcaoMenu > 6);
@@ -259,7 +259,7 @@ int MenuPrincipal()
         printf("3 - Relatorios\n");
         printf("4 - Sair\n");
         if(OpcaoMenu < 1 || OpcaoMenu > 4)
-            printf("Opcao anterior invalida!\n");
+            printf("\nOpcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
     } while (OpcaoMenu < 1 || OpcaoMenu > 4);   
