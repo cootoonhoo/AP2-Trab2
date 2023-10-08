@@ -118,6 +118,7 @@ void LiberarMemoria() {
     free(listaNomeFiliais);
 }
 
+/* Features do programa */
 void InserirNovaFilial() {
     char nomeFilial[50];
     setbuf(stdin, 0);
@@ -472,6 +473,48 @@ void ProdutoMaisVendido()
     printf("O produto mais vendido: %s", produtoMaisVendido);
     printf("Valor das vendas: R$%.2f\n\n", maiorValor);
     system("pause");
+    free(totalSomaProdutos);
+}
+
+void FilialMaisProdutosPorTrimeste()
+{
+    float *VendasTotaisFiliais, maiorVendas;
+    int Trimestre = 0;
+    char NomeFilial[50];
+    do
+    {
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio filial com mais vendidas ---\n\n");
+    printf("Digite qual trismestre deseja consultar(1,2,3 ou 4): ");
+    scanf(" %d", &Trimestre);
+    Trimestre--;
+    }while(Trimestre < 0 || Trimestre > 3);
+    VendasTotaisFiliais = (float *)malloc(QuantidadeFiliais * sizeof(float));
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        VendasTotaisFiliais[i] = 0;
+        for(int j = 0; j < QuantidadeProdutos; j++)
+            VendasTotaisFiliais[i] += ListaFiliais[i].MatrizProdutosTrimestre[Trimestre][j].quantidadeVendas;
+    }
+
+    maiorVendas = VendasTotaisFiliais[0];
+    strcpy(NomeFilial, listaNomeFiliais[0]);
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+        if(VendasTotaisFiliais[i] > maiorVendas)
+        {
+            strcpy(NomeFilial, listaNomeFiliais[i]);
+            maiorVendas = VendasTotaisFiliais[i];
+        }
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio filial com mais vendidas ---\n\n");
+    printf("A filial com mais vendas no trimestre %d: %s",Trimestre + 1, NomeFilial);
+    printf("Valor das vendas: R$%.2f\n\n", maiorVendas);
+    system("pause");
+    free(VendasTotaisFiliais);
 }
 
 /* Métodos Menu */
@@ -589,7 +632,7 @@ int MenuRelatorios()
         Headder(QuantidadeProdutos,QuantidadeFiliais);
         printf("\n \t\t=== Menu Relatorios ===\n\n");
         printf("1 - Produto mais vendido por filial\n");
-        printf("2 - Filial que mais vende produtos\n");
+        printf("2 - Filial que mais vende produtos num trimestre\n");
         printf("3 - Produto mais vendido\n");
         printf("4 - Filial que mais vende\n");
         printf("5 - Melhor trimestre\n");
@@ -605,8 +648,7 @@ int MenuRelatorios()
         ProdutoMaisVendido();
         break;
     case 2:
-        printf("Filial que mais vende produtos\n");
-        system("pause");
+        FilialMaisProdutosPorTrimeste();
         break;    
     case 3:
         printf("Produto mais vendido\n");
@@ -801,7 +843,6 @@ int main()
     int ControleDeFluxo = 0;
     ControleDeFluxo = IniciarSistema();
     if(!ControleDeFluxo) return 0;
-
     MenuPrincipal();
 
     // Acesso aos dados do cubo
