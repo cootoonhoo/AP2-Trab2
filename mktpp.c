@@ -563,6 +563,7 @@ void ProdutoMaisVendidoPorFilial()
     int validaFilial = 0, indiceFilial = 0, indiceProduto = 0;
     float *totalSomaProdutos, maiorVenda;
     char NomeFilial[50], nomeProduto[30];
+
     totalSomaProdutos = (float *)malloc(QuantidadeProdutos * sizeof(float));
 
     system("cls");
@@ -577,6 +578,7 @@ void ProdutoMaisVendidoPorFilial()
     printf("Digite o nome da filial: ");
     fgets(NomeFilial,50,stdin);
 
+
     for(int i = 0; i < QuantidadeFiliais; i++)
     {
         if(strcmp(NomeFilial,listaNomeFiliais[i]) == 0)
@@ -586,6 +588,7 @@ void ProdutoMaisVendidoPorFilial()
             break;
         }
     }
+
 
     if(!validaFilial)
     {
@@ -602,13 +605,13 @@ void ProdutoMaisVendidoPorFilial()
         totalSomaProdutos[i] = 0;
         for(int j = 0; j < 4; j++)
         {
-            totalSomaProdutos[i] += ListaFiliais[indiceFilial].MatrizProdutosTrimestre[j][i].quantidadeVendas;
+            totalSomaProdutos[i] += CuboProdutos[j][indiceFilial][i].quantidadeVendas;
         }
     }
 
     indiceProduto = 0;
     maiorVenda = totalSomaProdutos[0];
-    for(int i = 1; i < 4; i++)
+    for(int i = 1; i < QuantidadeProdutos; i++)
     {
         if(maiorVenda < totalSomaProdutos[i])
         {
