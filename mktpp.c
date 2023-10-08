@@ -211,34 +211,75 @@ void InserirNovoProduto() {
 }
 
 void RemoverProduto() {
-    int indiceProduto;
+    if(QuantidadeProdutos == 1)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos, QuantidadeFiliais);
+        printf("\n \t\t--- Remover produto ---\n\n");
+        printf("Impossivel deixar 0 produtos no sistema!E necessario haver pelo menos 1 produto.\n\n"); 
+        system("pause");
+        return;
+    }
+
+    int indiceProduto = -1;
+    char nomeProduto[30];
+
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Remover produto ---\n\n");
     printf("Lista de produtos:\n");
     for (int i = 0; i < QuantidadeProdutos; i++) {
-        printf("%d - %s", i + 1, listaNomeProdutos[i]);
+        printf(" - %s", listaNomeProdutos[i]);
+    }
+    setbuf(stdin, 0);
+    printf("\nDigite o nome do produto: ");
+    fgets(nomeProduto, 30, stdin);
+    
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        if(strcmp(nomeProduto,listaNomeProdutos[i]) == 0)
+            indiceProduto = i;
     }
 
-    printf("Digite o numero do produto que deseja remover: ");
-    scanf("%d", &indiceProduto);
-    indiceProduto--;
-
-    if (indiceProduto >= 0 && indiceProduto < QuantidadeProdutos) {
-
-        free(listaNomeProdutos[indiceProduto]);
-
-
-        for (int i = indiceProduto; i < QuantidadeProdutos - 1; i++) {
-            listaNomeProdutos[i] = listaNomeProdutos[i + 1];
+    if(indiceProduto == -1)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos, QuantidadeFiliais);
+        printf("\n \t\t--- Remover produto ---\n\n");
+        printf("Nao foi possivel encontrar o produto.\n\n"); 
+        system("pause");
+        return;
+    }
+    
+    QuantidadeProdutos--;
+    if(indiceProduto != QuantidadeProdutos)
+    {
+        for(int i = indiceProduto; i < QuantidadeProdutos; i++)
+        {
+            //Rearranjando ListaNomeProdutos
+            strcpy(listaNomeProdutos[i], listaNomeProdutos[i+1]);
+            for(int j = 0; j < 4; j++)
+                for(int k = 0; k < QuantidadeFiliais; k++)
+                {
+                    //Rearranjando Produtos no Cubo
+                    CuboProdutos[j][k][i].quantidadeVendas = CuboProdutos[j][k][i+1].quantidadeVendas;
+                    strcpy(CuboProdutos[j][k][i].NomeProduto, CuboProdutos[j][k][i+1].NomeProduto);
+                }
         }
-
-        QuantidadeProdutos--;
-
-        printf("Produto removido com sucesso!\n");
-    } else {
-        printf("Numero de produto inválido!\n");
     }
 
+    //Limpar ListaNomeProdutos
+    listaNomeProdutos = (char **)realloc(listaNomeProdutos, QuantidadeProdutos);
+
+    //Limpar CuboProdutos
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < QuantidadeFiliais; j++) {
+            CuboProdutos[i][j] = (Produto *)realloc(CuboProdutos[i][j],QuantidadeProdutos * sizeof(Produto));
+        }
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Remover produto ---\n\n");
+    printf("Produto removido com sucesso!\n\n");
     system("pause");
 }
 
@@ -1012,6 +1053,7 @@ int IniciarSistema()
 
 int main()
 {
+
     int ControleDeFluxo = 0;
     ControleDeFluxo = IniciarSistema();
     if(!ControleDeFluxo) return 0;
