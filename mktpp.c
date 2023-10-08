@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+//TODO: Fazer a verificação no começo se os valores são nulos!
+//TODO: Verificar se os inputs não são vazios
+
 /* Structs do programa */
 typedef struct 
 {
@@ -91,6 +94,7 @@ char** AlocaListaNomeFiliais(int QuantidadeFiliais)
 }
 
 void LiberarMemoria() {
+    //Arrumar esse código, falta muita coisa pra limpar ainda kkk
     for (int i = 0; i < 4; i++) {
         free(CuboProdutos[i]);
     }
@@ -432,6 +436,44 @@ void VendaProdutoFilial()
     system("pause");
 }
 
+void ProdutoMaisVendido()
+{
+    float *totalSomaProdutos, maiorValor;
+    char produtoMaisVendido[30];
+    totalSomaProdutos = (float *)malloc(QuantidadeProdutos * sizeof(float));
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        for(int j = 0; j < QuantidadeProdutos; j++)
+        {
+            totalSomaProdutos[j] = 0;
+            totalSomaProdutos[j] += CuboProdutos[0][i][j].quantidadeVendas;
+            totalSomaProdutos[j] += CuboProdutos[1][i][j].quantidadeVendas;
+            totalSomaProdutos[j] += CuboProdutos[2][i][j].quantidadeVendas;
+            totalSomaProdutos[j] += CuboProdutos[3][i][j].quantidadeVendas;
+        }
+    }
+
+    maiorValor = totalSomaProdutos[0];
+    strcpy(produtoMaisVendido, listaNomeProdutos[0]);
+
+    for(int i = 1; i < QuantidadeProdutos; i++)
+    {
+        if(totalSomaProdutos[i] > maiorValor)
+        {
+            maiorValor = totalSomaProdutos[i];
+            strcpy(produtoMaisVendido, listaNomeProdutos[i]);
+        }
+    }
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio produto mais vendido ---\n\n");
+    printf("O produto mais vendido: %s", produtoMaisVendido);
+    printf("Valor das vendas: R$%.2f\n\n", maiorValor);
+    system("pause");
+}
+
 /* Métodos Menu */
 void Headder(int qntProdutos, int qntFiliais)
 {
@@ -560,8 +602,7 @@ int MenuRelatorios()
     switch (OpcaoMenu)
     {
     case 1:
-        printf("Produto mais vendido por filial\n");
-        system("pause");
+        ProdutoMaisVendido();
         break;
     case 2:
         printf("Filial que mais vende produtos\n");
