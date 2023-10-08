@@ -22,6 +22,7 @@ Produto ***CuboProdutos;
 Filial *ListaFiliais;
 char **listaNomeProdutos;
 char **listaNomeFiliais;
+int foiResetado;
 
 /* Métodos do Cubo */
 
@@ -168,7 +169,7 @@ void RemoverProduto() {
         printf("%d - %s", i + 1, listaNomeProdutos[i]);
     }
 
-    printf("Digite o número do produto que deseja remover: ");
+    printf("Digite o numero do produto que deseja remover: ");
     scanf("%d", &indiceProduto);
     indiceProduto--;
 
@@ -185,7 +186,7 @@ void RemoverProduto() {
 
         printf("Produto removido com sucesso!\n");
     } else {
-        printf("Número de produto inválido!\n");
+        printf("Numero de produto inválido!\n");
     }
 
     system("pause");
@@ -201,7 +202,7 @@ void RemoverFilial() {
         printf("%d - %s", i + 1, listaNomeFiliais[i]);
     }
 
-    printf("Digite o número da filial que deseja remover: ");
+    printf("Digite o numero da filial que deseja remover: ");
     scanf("%d", &indiceFilial);
     indiceFilial--; 
     
@@ -217,18 +218,87 @@ void RemoverFilial() {
 
         printf("Filial removida com sucesso!\n");
     } else {
-        printf("Número de filial inválido!\n");
+        printf("Numero de filial invalido!\n");
     }
 
     system("pause");
 }
 
+//Função adicional
 void ReiniciarSistema(){
     printf("Coneçlar Sistema Reniciado com sucesso\n");
     LiberarMemoria();
     QuantidadeProdutos = 0;
     QuantidadeFiliais = 0;
     printf("Sistema Reniciado com sucesso\n");
+}
+
+void VendaProdutoTrimestre()
+{
+    int NumTrimestre = 0, indiceProduto = 0, validaProduto = 0;
+    float vendas;
+    char NomeProd[30];
+    do
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+        if(NumTrimestre < 0 || NumTrimestre > 3)
+            printf("Numero anterior invalido! Digite novamente.\n");
+        printf("Digite o numero do trimestre(1,2,3 ou 4): ");
+        scanf(" %d", &NumTrimestre);
+        NumTrimestre--;
+    } while (NumTrimestre < 0 || NumTrimestre > 3);
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+    printf("Lista de produtos: \n");
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        printf(" - %s", listaNomeProdutos[i]);
+    }
+    setbuf(stdin, 0);
+    printf("Digite o nome do produto: ");
+    fgets(NomeProd,30,stdin);
+
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        printf(" %d" ,strcmp(NomeProd,listaNomeProdutos[i]));
+        if(strcmp(NomeProd,listaNomeProdutos[i]) == 0)
+        {
+            validaProduto = 1;
+            indiceProduto = i;
+            break;
+        }
+    }
+
+    if(!validaProduto)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+        printf("Produto nao encontrado!\n\n");
+        system("pause");
+        return;
+    }
+
+    //Registrando vendas em cada filial
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+        printf("Digite o valor(R$) de vendas feitas na filial %s", ListaFiliais[i].NomeFilial);
+        scanf(" %f", &vendas);
+        CuboProdutos[NumTrimestre][i][indiceProduto].quantidadeVendas += vendas;
+    }
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+    printf("Vendas registradas com suecsso!\n\n");
+    system("pause");
 }
 
 /* Métodos Menu */
@@ -275,8 +345,7 @@ int MenuInserir()
     switch (OpcaoMenu)
     {
     case 1:
-        printf("Implementar produto/trimestre\n");
-        system("pause");
+        VendaProdutoTrimestre();
         break;
     case 2:
         printf("Implementar produto/filial\n");
@@ -330,6 +399,7 @@ int MenuRemover()
             if(resp == 's')
             {
                 ReiniciarSistema();
+                foiResetado = 1;
                 main();
             }
         break; 
@@ -409,7 +479,8 @@ int MenuPrincipal()
         break;
     case 2:
         MenuRemover();
-        MenuPrincipal();
+        if(!foiResetado)
+            MenuPrincipal();
         break;
     case 3:
         MenuRelatorios();
@@ -492,6 +563,10 @@ void PreencherDadosCubo()
             strcpy(CuboProdutos[1][i][j].NomeProduto, listaNomeProdutos[j]);
             strcpy(CuboProdutos[2][i][j].NomeProduto, listaNomeProdutos[j]);
             strcpy(CuboProdutos[3][i][j].NomeProduto, listaNomeProdutos[j]);
+            CuboProdutos[0][i][j].quantidadeVendas = 0.0;
+            CuboProdutos[1][i][j].quantidadeVendas = 0.0;
+            CuboProdutos[2][i][j].quantidadeVendas = 0.0;
+            CuboProdutos[3][i][j].quantidadeVendas = 0.0;
         }
     }
 }
@@ -570,6 +645,7 @@ int main()
 
     // Acesso aos dados do cubo
     printf("DEBUG CuboProdutos[0][0][0].NomeProduto: %s\n", CuboProdutos[0][0][0].NomeProduto);
+    printf("DEBUG CuboProdutos[0][0][0].quantidadeVendas: %.2f\n", CuboProdutos[0][0][0].quantidadeVendas);
     printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
 
     return 0;
