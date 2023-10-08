@@ -5,6 +5,7 @@ Segundo trabalho de Algoritmo e programação 2
 <ul>
     <li>Marco Antonio Batista de Souza</li>
     <li>Rafael Romancini</li>
+    <li>Guilherme França Soares</li>
 </ul>
 
 ## Enunciado
