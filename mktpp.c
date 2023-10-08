@@ -94,10 +94,12 @@ char** AlocaListaNomeFiliais(int QuantidadeFiliais)
 }
 
 void LiberarMemoria() {
-    //Arrumar esse código, falta muita coisa pra limpar ainda kkk
     for (int i = 0; i < 4; i++) {
+        for(int j = 0; j < QuantidadeFiliais; j++)
+            free(CuboProdutos[i][j]);
         free(CuboProdutos[i]);
     }
+    free(CuboProdutos);
 
     for (int i = 0; i < QuantidadeFiliais; i++) {
         for (int j = 0; j < 4; j++) {
@@ -1092,10 +1094,10 @@ int IniciarSistema()
 
 int main()
 {
-
     int ControleDeFluxo = 0;
     ControleDeFluxo = IniciarSistema();
     if(!ControleDeFluxo) return 0;
     MenuPrincipal();
+    LiberarMemoria();
     return 0;
 }
