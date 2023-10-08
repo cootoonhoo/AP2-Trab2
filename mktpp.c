@@ -364,7 +364,7 @@ void VendaProdutoFilial()
         printf(" - %s", listaNomeFiliais[i]);
     }
     setbuf(stdin, 0);
-    printf("Digite o nome do produto: ");
+    printf("Digite o nome da filial: ");
     fgets(NomeFilial,50,stdin);
 
     for(int i = 0; i < QuantidadeFiliais; i++)
@@ -476,6 +476,110 @@ void ProdutoMaisVendido()
     free(totalSomaProdutos);
 }
 
+void ProdutoMaisVendidoPorFilial()
+{
+    int validaFilial = 0, indiceFilial = 0, indiceProduto = 0;
+    float *totalSomaProdutos, maiorVenda;
+    char NomeFilial[50], nomeProduto[30];
+    totalSomaProdutos = (float *)malloc(QuantidadeProdutos * sizeof(float));
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Produto mais vendido pela filial ---\n\n");
+    printf("Lista de filiais: \n");
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        printf(" - %s", listaNomeFiliais[i]);
+    }
+    setbuf(stdin, 0);
+    printf("Digite o nome da filial: ");
+    fgets(NomeFilial,50,stdin);
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        if(strcmp(NomeFilial,listaNomeFiliais[i]) == 0)
+        {
+            validaFilial = 1;
+            indiceFilial = i;
+            break;
+        }
+    }
+
+    if(!validaFilial)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Produto mais vendido pela filial ---\n\n");
+        printf("Filial nao encontrada!\n\n");
+        system("pause");
+        return;
+    }
+
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        totalSomaProdutos[i] = 0;
+        for(int j = 0; j < 4; j++)
+        {
+            totalSomaProdutos[i] += ListaFiliais[indiceFilial].MatrizProdutosTrimestre[j][i].quantidadeVendas;
+        }
+    }
+
+    indiceProduto = 0;
+    maiorVenda = totalSomaProdutos[0];
+    for(int i = 1; i < 4; i++)
+    {
+        if(maiorVenda < totalSomaProdutos[i])
+        {
+            indiceProduto = i;
+            maiorVenda = totalSomaProdutos[i];
+        }
+    }
+    strcpy(nomeProduto, listaNomeProdutos[indiceProduto]);
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Produto mais vendido pela filial ---\n\n");
+    printf("O produto mais vendido pela filial : %s", nomeProduto);
+    printf("Quantidade de vendas R$: %.2f\n\n", maiorVenda);
+    system("pause");
+}
+
+void FilialMaisVende()
+{
+    float *VendasTotaisFiliais, maiorVendas;
+    char NomeFilial[50];
+
+    VendasTotaisFiliais = (float *)malloc(QuantidadeFiliais * sizeof(float));
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        VendasTotaisFiliais[i] = 0;
+        for(int j = 0; j < QuantidadeProdutos; j++)
+        {
+            VendasTotaisFiliais[i] += ListaFiliais[i].MatrizProdutosTrimestre[0][j].quantidadeVendas;
+            VendasTotaisFiliais[i] += ListaFiliais[i].MatrizProdutosTrimestre[1][j].quantidadeVendas;
+            VendasTotaisFiliais[i] += ListaFiliais[i].MatrizProdutosTrimestre[2][j].quantidadeVendas;
+            VendasTotaisFiliais[i] += ListaFiliais[i].MatrizProdutosTrimestre[3][j].quantidadeVendas;
+        }
+    }
+
+    maiorVendas = VendasTotaisFiliais[0];
+    strcpy(NomeFilial, listaNomeFiliais[0]);
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+        if(VendasTotaisFiliais[i] > maiorVendas)
+        {
+            strcpy(NomeFilial, listaNomeFiliais[i]);
+            maiorVendas = VendasTotaisFiliais[i];
+        }
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio filial com mais vendidas ---\n\n");
+    printf("A filial com mais vendas: %s", NomeFilial);
+    printf("Valor das vendas: R$%.2f\n\n", maiorVendas);
+    system("pause");
+    free(VendasTotaisFiliais);
+}
+
 void FilialMaisProdutosPorTrimeste()
 {
     float *VendasTotaisFiliais, maiorVendas;
@@ -515,6 +619,77 @@ void FilialMaisProdutosPorTrimeste()
     printf("Valor das vendas: R$%.2f\n\n", maiorVendas);
     system("pause");
     free(VendasTotaisFiliais);
+}
+
+void FilialQueMaisVende()
+{
+    char NomeFilial[30];
+    int indiceFilial;
+    float maiorVendas, *vendasTotais;
+    vendasTotais = (float *)malloc(QuantidadeFiliais * sizeof(float));
+
+    for(int j = 0; j < QuantidadeFiliais; j++)
+    {
+        vendasTotais[j] = 0;
+        for(int i = 0; i < 4; i++)
+            for(int k = 0; k < QuantidadeProdutos; k++)
+                vendasTotais[j] += CuboProdutos[i][j][k].quantidadeVendas; 
+    }
+
+    maiorVendas = vendasTotais[0];
+    indiceFilial = 0;
+    for(int i = 1; i < QuantidadeFiliais; i++)
+    {
+        if(maiorVendas < vendasTotais[i])
+        {
+            indiceFilial = i;
+            maiorVendas= vendasTotais[i];
+        }
+    }
+    strcpy(NomeFilial,listaNomeFiliais[indiceFilial]);
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio filial que mais vende ---\n\n");
+    printf("A filial que mais vendeu no ano: %s",NomeFilial);
+    printf("Valor das vendas: R$%.2f\n\n", maiorVendas);
+    system("pause");
+    free(vendasTotais);
+}
+
+void MelhorTrimestre()
+{
+    float maiorVendas, *vendasTotais;
+    int trimestre;
+    vendasTotais = (float *)malloc(4 * sizeof(float));
+
+    for(int i = 0; i < 4; i++)
+    {
+        vendasTotais[i] = 0;
+        for(int j = 0; j < QuantidadeFiliais; j++)
+            for(int k = 0; k < QuantidadeProdutos; k++)
+                vendasTotais[i] += CuboProdutos[i][j][k].quantidadeVendas;
+    }
+
+    maiorVendas = vendasTotais[0];
+    trimestre = 0;
+
+    for(int i = 1; i < 4; i++)
+    {
+        if(maiorVendas < vendasTotais[i])
+        {
+            trimestre = i;
+            maiorVendas = vendasTotais[i];
+        }
+    }
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Relatorio filial que mais vende ---\n\n");
+    printf("A trimeste que mais vendeu no ano: %d trimestre\n",trimestre +1);
+    printf("Valor das vendas: R$%.2f\n\n", maiorVendas);
+    system("pause");
+    free(vendasTotais);
 }
 
 /* Métodos Menu */
@@ -645,22 +820,19 @@ int MenuRelatorios()
     switch (OpcaoMenu)
     {
     case 1:
-        ProdutoMaisVendido();
+        ProdutoMaisVendidoPorFilial();
         break;
     case 2:
         FilialMaisProdutosPorTrimeste();
         break;    
     case 3:
-        printf("Produto mais vendido\n");
-        system("pause");
+        ProdutoMaisVendido();
         break;    
     case 4:
-        printf("Filial que mais vende\n");
-        system("pause");
+        FilialQueMaisVende();
         break;    
     case 5:
-        printf("Melhor trimestre\n");
-        system("pause");
+        MelhorTrimestre();
         break; 
     default:
         return;
@@ -844,23 +1016,5 @@ int main()
     ControleDeFluxo = IniciarSistema();
     if(!ControleDeFluxo) return 0;
     MenuPrincipal();
-
-    // Acesso aos dados do cubo
-    // printf("DEBUG CuboProdutos[0][1][0].NomeProduto: %s\n", CuboProdutos[0][1][0].NomeProduto);
-    // printf("DEBUG CuboProdutos[0][1][0].quantidadeVendas: %.2f\n", CuboProdutos[0][1][0].quantidadeVendas);
-    // printf("DEBUG CuboProdutos[1][1][0].quantidadeVendas: %.2f\n", CuboProdutos[1][1][0].quantidadeVendas);
-    // printf("DEBUG CuboProdutos[2][1][0].quantidadeVendas: %.2f\n", CuboProdutos[2][1][0].quantidadeVendas);
-    // printf("DEBUG CuboProdutos[3][1][0].quantidadeVendas: %.2f\n", CuboProdutos[3][1][0].quantidadeVendas);
-    
-    // printf("DEBUG listaNomeFiliais[0].NomeFilial: %s\n", listaNomeFiliais[0]);
-    // printf("DEBUG listaNomeFiliais[1].NomeFilial: %s\n", listaNomeFiliais[1]);
-
-    
-    // printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
-    // printf("DEBUG ListaFiliais[1].NomeFilial: %s\n", ListaFiliais[1].NomeFilial);
-
-    printf("DEBUG ListaFiliais[1].MatrizProdutosTrimestre[0][0].NomeProduto: %s\n", ListaFiliais[1].MatrizProdutosTrimestre[0][0].NomeProduto);
-    printf("DEBUG ListaFiliais[1].MatrizProdutosTrimestre[0][0]: %f\n", ListaFiliais[1].MatrizProdutosTrimestre[0][0].quantidadeVendas);
-
     return 0;
 }
