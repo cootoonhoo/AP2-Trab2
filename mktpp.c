@@ -89,6 +89,148 @@ char** AlocaListaNomeFiliais(int QuantidadeFiliais)
     return novaListaNomes;
 }
 
+void LiberarMemoria() {
+    for (int i = 0; i < 4; i++) {
+        free(CuboProdutos[i]);
+    }
+
+    for (int i = 0; i < QuantidadeFiliais; i++) {
+        for (int j = 0; j < 4; j++) {
+            free(ListaFiliais[i].MatrizProdutosTrimestre[j]);
+        }
+        free(ListaFiliais[i].MatrizProdutosTrimestre);
+    }
+    free(ListaFiliais);
+
+    for (int i = 0; i < QuantidadeProdutos; i++) {
+        free(listaNomeProdutos[i]);
+    }
+    free(listaNomeProdutos);
+
+    for (int i = 0; i < QuantidadeFiliais; i++) {
+        free(listaNomeFiliais[i]);
+    }
+    free(listaNomeFiliais);
+}
+
+// Função para Inserir nova filial
+void InserirNovaFilial() {
+    char nomeFilial[50];
+    setbuf(stdin, 0);
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("Digite o nome da nova filial: ");
+    fgets(nomeFilial, 50, stdin);
+
+    // Alocar memória para a nova filial na lista de nomes de filiais
+    listaNomeFiliais = realloc(listaNomeFiliais, (QuantidadeFiliais + 1) * sizeof(char*));
+    listaNomeFiliais[QuantidadeFiliais] = malloc(50 * sizeof(char));
+    strcpy(listaNomeFiliais[QuantidadeFiliais], nomeFilial);
+
+    QuantidadeFiliais++;
+
+    ListaFiliais = realloc(ListaFiliais, QuantidadeFiliais * sizeof(Filial));
+    ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre = malloc(4 * sizeof(Produto*));
+    for (int i = 0; i < 4; i++) {
+        ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre[i] = CuboProdutos[i][QuantidadeFiliais - 1];
+    }
+
+    printf("Nova filial inserida com sucesso!\n");
+    system("pause");
+}
+
+// Função para Inserir novo produto
+void InserirNovoProduto() {
+    char nomeProduto[30];
+    setbuf(stdin, 0);
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("Digite o nome do novo produto: ");
+    fgets(nomeProduto, 30, stdin);
+
+    listaNomeProdutos = realloc(listaNomeProdutos, (QuantidadeProdutos + 1) * sizeof(char*));
+    listaNomeProdutos[QuantidadeProdutos] = malloc(30 * sizeof(char));
+    strcpy(listaNomeProdutos[QuantidadeProdutos], nomeProduto);
+   
+    QuantidadeProdutos++;
+
+    printf("Novo produto inserido com sucesso!\n");
+    system("pause");
+}
+
+// Função para Remoção do produto
+void RemoverProduto() {
+    int indiceProduto;
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("Lista de produtos:\n");
+    for (int i = 0; i < QuantidadeProdutos; i++) {
+        printf("%d - %s", i + 1, listaNomeProdutos[i]);
+    }
+
+    printf("Digite o número do produto que deseja remover: ");
+    scanf("%d", &indiceProduto);
+    indiceProduto--;
+
+    if (indiceProduto >= 0 && indiceProduto < QuantidadeProdutos) {
+
+        free(listaNomeProdutos[indiceProduto]);
+
+
+        for (int i = indiceProduto; i < QuantidadeProdutos - 1; i++) {
+            listaNomeProdutos[i] = listaNomeProdutos[i + 1];
+        }
+
+        QuantidadeProdutos--;
+
+        printf("Produto removido com sucesso!\n");
+    } else {
+        printf("Número de produto inválido!\n");
+    }
+
+    system("pause");
+}
+
+// Função para Remoção da filial
+void RemoverFilial() {
+    int indiceFilial;
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("Lista de filiais:\n");
+    for (int i = 0; i < QuantidadeFiliais; i++) {
+        printf("%d - %s", i + 1, listaNomeFiliais[i]);
+    }
+
+    printf("Digite o número da filial que deseja remover: ");
+    scanf("%d", &indiceFilial);
+    indiceFilial--; 
+    
+    if (indiceFilial >= 0 && indiceFilial < QuantidadeFiliais) {
+        free(listaNomeFiliais[indiceFilial]);
+        
+        for (int i = indiceFilial; i < QuantidadeFiliais - 1; i++) {
+            listaNomeFiliais[i] = listaNomeFiliais[i + 1];
+            ListaFiliais[i] = ListaFiliais[i + 1];
+        }
+
+        QuantidadeFiliais--;
+
+        printf("Filial removida com sucesso!\n");
+    } else {
+        printf("Número de filial inválido!\n");
+    }
+
+    system("pause");
+}
+
+void ReiniciarSistema(){
+    printf("Coneçlar Sistema Reniciado com sucesso\n");
+    LiberarMemoria();
+    QuantidadeProdutos = 0;
+    QuantidadeFiliais = 0;
+    printf("Sistema Reniciado com sucesso\n");
+}
+
 /* Métodos Menu */
 void Headder(int qntProdutos, int qntFiliais)
 {
@@ -141,13 +283,11 @@ int MenuInserir()
         system("pause");
         break;
     case 3:
-        printf("Implementar produto\n");
-        system("pause");
+        InserirNovoProduto();
         break;    
     case 4:
-        printf("Implementar nova filial\n");
-        system("pause");
-        break;    
+        InserirNovaFilial();
+        break;  
     default:
         return;
     }
@@ -174,12 +314,10 @@ int MenuRemover()
     switch (OpcaoMenu)
     {
     case 1:
-        printf("Implementar Remover Produto\n");
-        system("pause");
+        RemoverProduto();
         break;
     case 2:
-        printf("Implementar Remover filial\n");
-        system("pause");
+        RemoverFilial();
         break;
     case 3:
         system("cls");
@@ -191,8 +329,8 @@ int MenuRemover()
         system("color 0f");
             if(resp == 's')
             {
-            printf("Implementar Limpar Sistema\n");
-            system("pause");
+                ReiniciarSistema();
+                main();
             }
         break; 
     default:
