@@ -114,7 +114,6 @@ void LiberarMemoria() {
     free(listaNomeFiliais);
 }
 
-// Função para Inserir nova filial
 void InserirNovaFilial() {
     char nomeFilial[50];
     setbuf(stdin, 0);
@@ -140,7 +139,6 @@ void InserirNovaFilial() {
     system("pause");
 }
 
-// Função para Inserir novo produto
 void InserirNovoProduto() {
     char nomeProduto[30];
     setbuf(stdin, 0);
@@ -149,17 +147,24 @@ void InserirNovoProduto() {
     printf("Digite o nome do novo produto: ");
     fgets(nomeProduto, 30, stdin);
 
-    listaNomeProdutos = realloc(listaNomeProdutos, (QuantidadeProdutos + 1) * sizeof(char*));
-    listaNomeProdutos[QuantidadeProdutos] = malloc(30 * sizeof(char));
-    strcpy(listaNomeProdutos[QuantidadeProdutos], nomeProduto);
-   
     QuantidadeProdutos++;
 
+    listaNomeProdutos = (char **)realloc(listaNomeProdutos, QuantidadeProdutos * sizeof(char*));
+    listaNomeProdutos[QuantidadeProdutos - 1] = malloc(30 * sizeof(char));
+    strcpy(listaNomeProdutos[QuantidadeProdutos - 1], nomeProduto);
+    
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < QuantidadeFiliais; j++)
+        {
+            CuboProdutos[i][j] = (Produto *)realloc(CuboProdutos[i][j], QuantidadeProdutos * sizeof(Produto));
+            strcpy(CuboProdutos[i][j][QuantidadeProdutos - 1].NomeProduto, nomeProduto);
+            CuboProdutos[i][j][QuantidadeProdutos - 1].quantidadeVendas = 0.0;
+        }
+    
     printf("Novo produto inserido com sucesso!\n");
     system("pause");
 }
 
-// Função para Remoção do produto
 void RemoverProduto() {
     int indiceProduto;
     system("cls");
@@ -192,7 +197,6 @@ void RemoverProduto() {
     system("pause");
 }
 
-// Função para Remoção da filial
 void RemoverFilial() {
     int indiceFilial;
     system("cls");
@@ -224,8 +228,8 @@ void RemoverFilial() {
     system("pause");
 }
 
-//Função adicional
 void ReiniciarSistema(){
+    //Função adicional
     printf("Coneçlar Sistema Reniciado com sucesso\n");
     LiberarMemoria();
     QuantidadeProdutos = 0;
@@ -735,6 +739,11 @@ int main()
     printf("DEBUG CuboProdutos[1][0][0].quantidadeVendas: %.2f\n", CuboProdutos[1][0][0].quantidadeVendas);
     printf("DEBUG CuboProdutos[2][0][0].quantidadeVendas: %.2f\n", CuboProdutos[2][0][0].quantidadeVendas);
     printf("DEBUG CuboProdutos[3][0][0].quantidadeVendas: %.2f\n", CuboProdutos[3][0][0].quantidadeVendas);
+    printf("\nDEBUG CuboProdutos[0][0][1].NomeProduto: %s\n", CuboProdutos[0][0][1].NomeProduto);
+    printf("DEBUG CuboProdutos[0][0][1].quantidadeVendas: %.2f\n", CuboProdutos[0][0][1].quantidadeVendas);
+    printf("DEBUG CuboProdutos[1][0][1].quantidadeVendas: %.2f\n", CuboProdutos[1][0][1].quantidadeVendas);
+    printf("DEBUG CuboProdutos[2][0][1].quantidadeVendas: %.2f\n", CuboProdutos[2][0][1].quantidadeVendas);
+    printf("DEBUG CuboProdutos[3][0][1].quantidadeVendas: %.2f\n", CuboProdutos[3][0][1].quantidadeVendas);
     printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
 
     return 0;
