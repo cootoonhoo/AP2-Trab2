@@ -264,7 +264,6 @@ void VendaProdutoTrimestre()
 
     for(int i = 0; i < QuantidadeProdutos; i++)
     {
-        printf(" %d" ,strcmp(NomeProd,listaNomeProdutos[i]));
         if(strcmp(NomeProd,listaNomeProdutos[i]) == 0)
         {
             validaProduto = 1;
@@ -292,6 +291,94 @@ void VendaProdutoTrimestre()
         printf("Digite o valor(R$) de vendas feitas na filial %s", ListaFiliais[i].NomeFilial);
         scanf(" %f", &vendas);
         CuboProdutos[NumTrimestre][i][indiceProduto].quantidadeVendas += vendas;
+    }
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+    printf("Vendas registradas com suecsso!\n\n");
+    system("pause");
+}
+
+void VendaProdutoFilial()
+{
+    int validaFilial = 0, indiceFilial = 0, indiceProduto = 0, validaProduto = 0;
+    float vendas;
+    char NomeProd[30], NomeFilial[50];
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Venda de produto na filial ---\n\n");
+    printf("Lista de filiais: \n");
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        printf(" - %s", listaNomeFiliais[i]);
+    }
+    setbuf(stdin, 0);
+    printf("Digite o nome do produto: ");
+    fgets(NomeFilial,50,stdin);
+
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        if(strcmp(NomeFilial,listaNomeFiliais[i]) == 0)
+        {
+            validaFilial = 1;
+            indiceFilial = i;
+            break;
+        }
+    }
+
+    if(!validaFilial)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto na filial ---\n\n");
+        printf("Filial nao encontrada!\n\n");
+        system("pause");
+        return;
+    }
+
+    system("cls");
+    Headder(QuantidadeProdutos,QuantidadeFiliais);
+    printf("\n \t\t--- Venda de produto na filial ---\n\n");
+    printf("Lista de produtos: \n");
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        printf(" - %s", listaNomeProdutos[i]);
+    }
+    setbuf(stdin, 0);
+    printf("Digite o nome do produto: ");
+    fgets(NomeProd,30,stdin);
+
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        if(strcmp(NomeProd,listaNomeProdutos[i]) == 0)
+        {
+            validaProduto = 1;
+            indiceProduto = i;
+            break;
+        }
+    }
+
+    if(!validaProduto)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+        printf("Produto nao encontrado!\n\n");
+        system("pause");
+        return;
+    }
+
+    //Registrando vendas em cada trimestre
+    for(int i = 0; i < 4; i++)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos,QuantidadeFiliais);
+        printf("\n \t\t--- Venda de produto no trimeste ---\n\n");
+        printf("Digite o valor(R$) de vendas feitas no trimestre %d:\n", i+1);
+        scanf(" %f", &vendas);
+        CuboProdutos[i][indiceFilial][indiceProduto].quantidadeVendas += vendas;
     }
 
     system("cls");
@@ -348,8 +435,7 @@ int MenuInserir()
         VendaProdutoTrimestre();
         break;
     case 2:
-        printf("Implementar produto/filial\n");
-        system("pause");
+        VendaProdutoFilial();
         break;
     case 3:
         InserirNovoProduto();
@@ -646,6 +732,9 @@ int main()
     // Acesso aos dados do cubo
     printf("DEBUG CuboProdutos[0][0][0].NomeProduto: %s\n", CuboProdutos[0][0][0].NomeProduto);
     printf("DEBUG CuboProdutos[0][0][0].quantidadeVendas: %.2f\n", CuboProdutos[0][0][0].quantidadeVendas);
+    printf("DEBUG CuboProdutos[1][0][0].quantidadeVendas: %.2f\n", CuboProdutos[1][0][0].quantidadeVendas);
+    printf("DEBUG CuboProdutos[2][0][0].quantidadeVendas: %.2f\n", CuboProdutos[2][0][0].quantidadeVendas);
+    printf("DEBUG CuboProdutos[3][0][0].quantidadeVendas: %.2f\n", CuboProdutos[3][0][0].quantidadeVendas);
     printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
 
     return 0;
