@@ -119,23 +119,52 @@ void InserirNovaFilial() {
     setbuf(stdin, 0);
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Inserir nova filial ---\n\n");
     printf("Digite o nome da nova filial: ");
     fgets(nomeFilial, 50, stdin);
 
-    // Alocar memória para a nova filial na lista de nomes de filiais
-    listaNomeFiliais = realloc(listaNomeFiliais, (QuantidadeFiliais + 1) * sizeof(char*));
-    listaNomeFiliais[QuantidadeFiliais] = malloc(50 * sizeof(char));
-    strcpy(listaNomeFiliais[QuantidadeFiliais], nomeFilial);
+     for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        if(strcmp(nomeFilial,listaNomeFiliais[i]) == 0)
+        {
+            system("cls");
+            Headder(QuantidadeProdutos, QuantidadeFiliais);
+            printf("\n \t\t--- Inserir nova filial ---\n\n");
+            printf("Esse nome ja esta sendo utilizado!\n\n");
+            system("pause");
+            return;
+        }
+    }
 
     QuantidadeFiliais++;
 
-    ListaFiliais = realloc(ListaFiliais, QuantidadeFiliais * sizeof(Filial));
-    ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre = malloc(4 * sizeof(Produto*));
-    for (int i = 0; i < 4; i++) {
-        ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre[i] = CuboProdutos[i][QuantidadeFiliais - 1];
+    // Alocar memória para a nova filial na lista de nomes de filiais
+    listaNomeFiliais = (char **)realloc(listaNomeFiliais, QuantidadeFiliais * sizeof(char*));
+    listaNomeFiliais[QuantidadeFiliais - 1 ] = malloc(50 * sizeof(char));
+    strcpy(listaNomeFiliais[QuantidadeFiliais - 1], nomeFilial);
+
+    for(int i = 0; i < 4; i++)
+    {
+        CuboProdutos[i] = (Produto **)realloc(CuboProdutos[i], QuantidadeFiliais * sizeof(Produto *));
+        CuboProdutos[i][QuantidadeFiliais - 1] = (Produto *)malloc(QuantidadeProdutos * sizeof(Produto));
+        for(int j = 0; j < QuantidadeProdutos; j++)
+        {
+            strcpy(CuboProdutos[i][QuantidadeFiliais - 1 ][j].NomeProduto, listaNomeProdutos[j]);
+            CuboProdutos[i][QuantidadeFiliais - 1 ][j].quantidadeVendas = 0.0;
+        }
     }
 
-    printf("Nova filial inserida com sucesso!\n");
+    ListaFiliais = (Filial *)realloc(ListaFiliais, QuantidadeFiliais * sizeof(Filial));
+    strcpy(ListaFiliais[QuantidadeFiliais - 1].NomeFilial, listaNomeFiliais[QuantidadeFiliais - 1]);
+
+    ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre = malloc(4 * sizeof(Produto*));
+    for (int i = 0; i < 4; i++) 
+        ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre[i] = &CuboProdutos[i][QuantidadeFiliais - 1][0];
+    
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Inserir nova filial ---\n\n");
+    printf("Nova filial inserida com sucesso!\n\n");
     system("pause");
 }
 
@@ -144,8 +173,22 @@ void InserirNovoProduto() {
     setbuf(stdin, 0);
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Inserir novo produto ---\n\n");
     printf("Digite o nome do novo produto: ");
     fgets(nomeProduto, 30, stdin);
+
+    for(int i = 0; i < QuantidadeProdutos; i++)
+    {
+        if(strcmp(nomeProduto,listaNomeProdutos[i]) == 0)
+        {
+            system("cls");
+            Headder(QuantidadeProdutos, QuantidadeFiliais);
+            printf("\n \t\t--- Inserir novo produto ---\n\n");
+            printf("Esse produto ja existe!\n\n");
+            system("pause");
+            return;
+        }
+    }
 
     QuantidadeProdutos++;
 
@@ -153,15 +196,12 @@ void InserirNovoProduto() {
     listaNomeProdutos[QuantidadeProdutos - 1] = malloc(30 * sizeof(char));
     strcpy(listaNomeProdutos[QuantidadeProdutos - 1], nomeProduto);
     
-    for(int i = 0; i < 4; i++)
-        for(int j = 0; j < QuantidadeFiliais; j++)
-        {
-            CuboProdutos[i][j] = (Produto *)realloc(CuboProdutos[i][j], QuantidadeProdutos * sizeof(Produto));
-            strcpy(CuboProdutos[i][j][QuantidadeProdutos - 1].NomeProduto, nomeProduto);
-            CuboProdutos[i][j][QuantidadeProdutos - 1].quantidadeVendas = 0.0;
-        }
+   
     
-    printf("Novo produto inserido com sucesso!\n");
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Inserir novo produto ---\n\n");
+    printf("Novo produto inserido com sucesso!\n\n");
     system("pause");
 }
 
@@ -723,28 +763,22 @@ int main()
 
     MenuPrincipal();
 
-    // Preenchendo o cubo com valores de exemplo
-    // for (int t = 0; t < 4; t++) {
-    //     for (int f = 0; f < QuantidadeFiliais; f++) {
-    //         for (int p = 0; p < QuantidadeProdutos; p++) {
-    //             snprintf(CuboProdutos[t][f][p].NomeProduto, 30, "Produto%d_T%d_F%d", p + 1, t + 1, f + 1);
-    //             // CuboProdutos[t][f][p].ValorProduto = (p + 1) * (t + 1) * (f + 1) * 10.0; // Exemplo de valor
-    //         }
-    //     }
-    // }
-
     // Acesso aos dados do cubo
-    printf("DEBUG CuboProdutos[0][0][0].NomeProduto: %s\n", CuboProdutos[0][0][0].NomeProduto);
-    printf("DEBUG CuboProdutos[0][0][0].quantidadeVendas: %.2f\n", CuboProdutos[0][0][0].quantidadeVendas);
-    printf("DEBUG CuboProdutos[1][0][0].quantidadeVendas: %.2f\n", CuboProdutos[1][0][0].quantidadeVendas);
-    printf("DEBUG CuboProdutos[2][0][0].quantidadeVendas: %.2f\n", CuboProdutos[2][0][0].quantidadeVendas);
-    printf("DEBUG CuboProdutos[3][0][0].quantidadeVendas: %.2f\n", CuboProdutos[3][0][0].quantidadeVendas);
-    printf("\nDEBUG CuboProdutos[0][0][1].NomeProduto: %s\n", CuboProdutos[0][0][1].NomeProduto);
-    printf("DEBUG CuboProdutos[0][0][1].quantidadeVendas: %.2f\n", CuboProdutos[0][0][1].quantidadeVendas);
-    printf("DEBUG CuboProdutos[1][0][1].quantidadeVendas: %.2f\n", CuboProdutos[1][0][1].quantidadeVendas);
-    printf("DEBUG CuboProdutos[2][0][1].quantidadeVendas: %.2f\n", CuboProdutos[2][0][1].quantidadeVendas);
-    printf("DEBUG CuboProdutos[3][0][1].quantidadeVendas: %.2f\n", CuboProdutos[3][0][1].quantidadeVendas);
-    printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
+    // printf("DEBUG CuboProdutos[0][1][0].NomeProduto: %s\n", CuboProdutos[0][1][0].NomeProduto);
+    // printf("DEBUG CuboProdutos[0][1][0].quantidadeVendas: %.2f\n", CuboProdutos[0][1][0].quantidadeVendas);
+    // printf("DEBUG CuboProdutos[1][1][0].quantidadeVendas: %.2f\n", CuboProdutos[1][1][0].quantidadeVendas);
+    // printf("DEBUG CuboProdutos[2][1][0].quantidadeVendas: %.2f\n", CuboProdutos[2][1][0].quantidadeVendas);
+    // printf("DEBUG CuboProdutos[3][1][0].quantidadeVendas: %.2f\n", CuboProdutos[3][1][0].quantidadeVendas);
+    
+    // printf("DEBUG listaNomeFiliais[0].NomeFilial: %s\n", listaNomeFiliais[0]);
+    // printf("DEBUG listaNomeFiliais[1].NomeFilial: %s\n", listaNomeFiliais[1]);
+
+    
+    // printf("DEBUG ListaFiliais[0].NomeFilial: %s\n", ListaFiliais[0].NomeFilial);
+    // printf("DEBUG ListaFiliais[1].NomeFilial: %s\n", ListaFiliais[1].NomeFilial);
+
+    printf("DEBUG ListaFiliais[1].MatrizProdutosTrimestre[0][0].NomeProduto: %s\n", ListaFiliais[1].MatrizProdutosTrimestre[0][0].NomeProduto);
+    printf("DEBUG ListaFiliais[1].MatrizProdutosTrimestre[0][0]: %f\n", ListaFiliais[1].MatrizProdutosTrimestre[0][0].quantidadeVendas);
 
     return 0;
 }
