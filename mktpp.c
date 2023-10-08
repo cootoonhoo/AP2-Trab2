@@ -284,33 +284,72 @@ void RemoverProduto() {
 }
 
 void RemoverFilial() {
-    int indiceFilial;
+    if(QuantidadeFiliais == 1)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos, QuantidadeFiliais);
+        printf("\n \t\t--- Remover filial ---\n\n");
+        printf("Impossivel deixar 0 filiais no sistema!E necessario haver pelo menos 1 filial.\n\n"); 
+        system("pause");
+        return;
+    }
+
+    char nomeFilial[50];
+    int indiceFilial = -1;
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
-    printf("Lista de filiais:\n");
-    for (int i = 0; i < QuantidadeFiliais; i++) {
-        printf("%d - %s", i + 1, listaNomeFiliais[i]);
+    printf("\n \t\t--- Remover filial ---\n\n");
+    printf("Lista de filiais: \n");
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        printf(" - %s", listaNomeFiliais[i]);
     }
+    printf("Digite o nome da filial:");
+    setbuf(stdin, 0);
+    fgets(nomeFilial, 50, stdin);
 
-    printf("Digite o numero da filial que deseja remover: ");
-    scanf("%d", &indiceFilial);
-    indiceFilial--; 
-    
-    if (indiceFilial >= 0 && indiceFilial < QuantidadeFiliais) {
-        free(listaNomeFiliais[indiceFilial]);
-        
-        for (int i = indiceFilial; i < QuantidadeFiliais - 1; i++) {
-            listaNomeFiliais[i] = listaNomeFiliais[i + 1];
-            ListaFiliais[i] = ListaFiliais[i + 1];
+    for(int i = 0; i < QuantidadeFiliais; i++)
+    {
+        if(strcmp(nomeFilial,listaNomeFiliais[i]) == 0)
+        {
+            indiceFilial = i;
+            break;
         }
-
-        QuantidadeFiliais--;
-
-        printf("Filial removida com sucesso!\n");
-    } else {
-        printf("Numero de filial invalido!\n");
     }
 
+    if(indiceFilial == -1)
+    {
+        system("cls");
+        Headder(QuantidadeProdutos, QuantidadeFiliais);
+        printf("\n \t\t--- Remover filial ---\n\n");
+        printf("Nao foi possivel encontrar a filial.\n\n"); 
+        system("pause");
+        return;
+    }
+
+    QuantidadeFiliais--;
+    if(indiceFilial != QuantidadeFiliais)
+    {
+        for(int i = indiceFilial; i < QuantidadeFiliais; i++)
+        {
+            strcpy(listaNomeFiliais[i],listaNomeFiliais[i+1]);
+            for(int j = 0; j < 4; j++)
+            {
+                CuboProdutos[i][j] = CuboProdutos[i][j+1];
+            }
+        }
+    }
+
+    //Limpar listaNomeFiliais
+    listaNomeFiliais = (char **)realloc(listaNomeFiliais, QuantidadeFiliais);
+
+    //Limpar CuboProdutos
+    for (int i = 0; i < 4; i++)
+        CuboProdutos[i] = (Produto **)realloc(CuboProdutos[i],QuantidadeFiliais * sizeof(Produto *));
+    system("cls");
+    Headder(QuantidadeProdutos, QuantidadeFiliais);
+    printf("\n \t\t--- Remover filial ---\n\n");
+    printf("Filial removida com sucesso!\n\n");
     system("pause");
 }
 
