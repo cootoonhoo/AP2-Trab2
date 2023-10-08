@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//TODO: Fazer a verificação no começo se os valores são nulos!
-//TODO: Verificar se os inputs não são vazios
-
 /* Structs do programa */
 typedef struct 
 {
