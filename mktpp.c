@@ -3,7 +3,7 @@
 #include <string.h>
 
 /* Structs do programa */
-typedef struct 
+typedef struct
 {
     char NomeProduto[30];
     float quantidadeVendas;
@@ -97,13 +97,6 @@ void LiberarMemoria() {
         free(CuboProdutos[i]);
     }
     free(CuboProdutos);
-
-    for (int i = 0; i < QuantidadeFiliais; i++) {
-        for (int j = 0; j < 4; j++) {
-            free(ListaFiliais[i].MatrizProdutosTrimestre[j]);
-        }
-        free(ListaFiliais[i].MatrizProdutosTrimestre);
-    }
     free(ListaFiliais);
 
     for (int i = 0; i < QuantidadeProdutos; i++) {
@@ -162,9 +155,9 @@ void InserirNovaFilial() {
     strcpy(ListaFiliais[QuantidadeFiliais - 1].NomeFilial, listaNomeFiliais[QuantidadeFiliais - 1]);
 
     ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre = malloc(4 * sizeof(Produto*));
-    for (int i = 0; i < 4; i++) 
+    for (int i = 0; i < 4; i++)
         ListaFiliais[QuantidadeFiliais - 1].MatrizProdutosTrimestre[i] = &CuboProdutos[i][QuantidadeFiliais - 1][0];
-    
+
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
     printf("\n \t\t--- Inserir nova filial ---\n\n");
@@ -199,9 +192,9 @@ void InserirNovoProduto() {
     listaNomeProdutos = (char **)realloc(listaNomeProdutos, QuantidadeProdutos * sizeof(char*));
     listaNomeProdutos[QuantidadeProdutos - 1] = malloc(30 * sizeof(char));
     strcpy(listaNomeProdutos[QuantidadeProdutos - 1], nomeProduto);
-    
-   
-    
+
+
+
     system("cls");
     Headder(QuantidadeProdutos, QuantidadeFiliais);
     printf("\n \t\t--- Inserir novo produto ---\n\n");
@@ -215,7 +208,7 @@ void RemoverProduto() {
         system("cls");
         Headder(QuantidadeProdutos, QuantidadeFiliais);
         printf("\n \t\t--- Remover produto ---\n\n");
-        printf("Impossivel deixar 0 produtos no sistema!E necessario haver pelo menos 1 produto.\n\n"); 
+        printf("Impossivel deixar 0 produtos no sistema!E necessario haver pelo menos 1 produto.\n\n");
         system("pause");
         return;
     }
@@ -233,7 +226,7 @@ void RemoverProduto() {
     setbuf(stdin, 0);
     printf("\nDigite o nome do produto: ");
     fgets(nomeProduto, 30, stdin);
-    
+
     for(int i = 0; i < QuantidadeProdutos; i++)
     {
         if(strcmp(nomeProduto,listaNomeProdutos[i]) == 0)
@@ -245,11 +238,11 @@ void RemoverProduto() {
         system("cls");
         Headder(QuantidadeProdutos, QuantidadeFiliais);
         printf("\n \t\t--- Remover produto ---\n\n");
-        printf("Nao foi possivel encontrar o produto.\n\n"); 
+        printf("Nao foi possivel encontrar o produto.\n\n");
         system("pause");
         return;
     }
-    
+
     QuantidadeProdutos--;
     if(indiceProduto != QuantidadeProdutos)
     {
@@ -288,7 +281,7 @@ void RemoverFilial() {
         system("cls");
         Headder(QuantidadeProdutos, QuantidadeFiliais);
         printf("\n \t\t--- Remover filial ---\n\n");
-        printf("Impossivel deixar 0 filiais no sistema!E necessario haver pelo menos 1 filial.\n\n"); 
+        printf("Impossivel deixar 0 filiais no sistema!E necessario haver pelo menos 1 filial.\n\n");
         system("pause");
         return;
     }
@@ -321,7 +314,7 @@ void RemoverFilial() {
         system("cls");
         Headder(QuantidadeProdutos, QuantidadeFiliais);
         printf("\n \t\t--- Remover filial ---\n\n");
-        printf("Nao foi possivel encontrar a filial.\n\n"); 
+        printf("Nao foi possivel encontrar a filial.\n\n");
         system("pause");
         return;
     }
@@ -715,7 +708,7 @@ void FilialQueMaisVende()
         vendasTotais[j] = 0;
         for(int i = 0; i < 4; i++)
             for(int k = 0; k < QuantidadeProdutos; k++)
-                vendasTotais[j] += CuboProdutos[i][j][k].quantidadeVendas; 
+                vendasTotais[j] += CuboProdutos[i][j][k].quantidadeVendas;
     }
 
     maiorVendas = vendasTotais[0];
@@ -825,10 +818,10 @@ int MenuInserir()
         break;
     case 3:
         InserirNovoProduto();
-        break;    
+        break;
     case 4:
         InserirNovaFilial();
-        break;  
+        break;
     default:
         return;
     }
@@ -874,7 +867,7 @@ int MenuRemover()
                 foiResetado = 1;
                 main();
             }
-        break; 
+        break;
     default:
         return;
     }
@@ -906,16 +899,16 @@ int MenuRelatorios()
         break;
     case 2:
         FilialMaisProdutosPorTrimeste();
-        break;    
+        break;
     case 3:
         ProdutoMaisVendido();
-        break;    
+        break;
     case 4:
         FilialQueMaisVende();
-        break;    
+        break;
     case 5:
         MelhorTrimestre();
-        break; 
+        break;
     default:
         return;
     }
@@ -937,7 +930,7 @@ int MenuPrincipal()
             printf("\nOpcao anterior invalida!\n");
         printf("\nSelecione uma opcao do menu: ");
         scanf(" %d", &OpcaoMenu);
-    } while (OpcaoMenu < 1 || OpcaoMenu > 4);   
+    } while (OpcaoMenu < 1 || OpcaoMenu > 4);
     switch (OpcaoMenu)
     {
     case 1:
@@ -952,7 +945,7 @@ int MenuPrincipal()
     case 3:
         MenuRelatorios();
         MenuPrincipal();
-        break;    
+        break;
     default:
         return;
     }
@@ -1078,18 +1071,18 @@ int IniciarSistema()
     return 1;
 }
 
-/* 
+/*
 
-        ORDEM DE MANIPULAÇÃO DOS DADOS 
+        ORDEM DE MANIPULAÇÃO DOS DADOS
     CuboProdutos[TrimestreAno][Nº Filial][Nº Produto]
         - NomeProduto
         - quantidadeVendas
-    
+
     ListaFiliais[Nº Filial]
         - NomeFiliai
         - MatrizProdutosTrimestre[TrimestreAno][Nº Produto]
             - NomeProduto
-            - quantidadeVendas  
+            - quantidadeVendas
 */
 
 int main()
